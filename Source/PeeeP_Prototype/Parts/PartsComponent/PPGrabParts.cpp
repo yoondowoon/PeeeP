@@ -28,7 +28,7 @@ UPPGrabParts::UPPGrabParts()
 	}
 
 
-	HitSocket = TEXT("Bone010");
+	GrabSocket = TEXT("GrabSocket");
 
 	// Grab() -> GrabRelease() 호출 순서가 무조건 보장되어야만 함. 하지만 그랩 애니메이션 발동 후 overlap된 오브젝트가 있을때 만 Grab()이 호출되므로, 호출 직전에 키를 때버려서
 	// GrabRelase()가 호출되버리면 순서가 다음과 같이 GrabRelease() -> Grab() 바뀌는 경우가 생길 수 있음.  
@@ -78,11 +78,6 @@ void UPPGrabParts::OnComponentCreated()
     }
 }
 
-
-
-
-
-
 void UPPGrabParts::BeginPlay()
 {
 	Super::BeginPlay();
@@ -102,7 +97,10 @@ void UPPGrabParts::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	}
 }
 
-
+void UPPGrabParts::CleanUpParts()
+{
+	GrabRelease();
+}
 
 void UPPGrabParts::HandleGrabAnimation()
 {
@@ -113,11 +111,38 @@ void UPPGrabParts::HandleGrabAnimation()
 	
 }
 
-void UPPGrabParts::Grab(FHitResult& InHitResult)
+void UPPGrabParts::Grab()
 {
 	UE_LOG(LogTemp, Log, TEXT("Grab Start"));
-	if (!IsGrabbed) return;
-	GrabHandle->GrabComponentAtLocationWithRotation(InHitResult.GetComponent(), TEXT("None"), InHitResult.GetComponent()->GetComponentLocation(), FRotator::ZeroRotator);
+
+	FHitResult HitResult;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(Grab), false, Owner);
+
+	const FVector StartPos = Owner->GetMesh()->GetSocketLocation(GrabSocket);
+	const FVector EndPos = StartPos + Owner->GetActorForwardVector() * 5.0f;
+
+	bool HitDetected = GetWorld()->SweepSingleByChannel(HitResult, StartPos, EndPos, FQuat::Identity, ECC_GameTraceChannel2, FCollisionShape::MakeSphere(10.0f), Params);
+	if (HitDetected)
+	{
+		UE_LOG(LogTemp, Log, TEXT("GrabHit"));
+		SetIsGrabbed(true);
+
+		FVector HitLocation = HitResult.ImpactPoint;
+		FTransform HitActorTransform = HitResult.GetComponent()->GetComponentTransform();
+
+		GrabbedObjectOffset = HitActorTransform.InverseTransformPosition(HitLocation);
+
+		GrabHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), TEXT("None"), HitResult.GetComponent()->GetComponentLocation(), FRotator::ZeroRotator);
+	}
+
+#if ENABLE_DRAW_DEBUG
+	FVector CapsuleOrigin = StartPos + (EndPos - StartPos) * 0.5f;
+	float CapsuleHalfHeight = 5.0f * 0.5f;
+	FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
+
+	DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, 10.0f, FRotationMatrix::MakeFromZ(Owner->GetActorForwardVector()).ToQuat(), DrawColor, false, 5.0f);
+#endif
+
 }
 
 
@@ -137,14 +162,14 @@ void UPPGrabParts::GrabRelease()
 
 void UPPGrabParts::UpdateGrabbedObjectPosition()
 {
-	/*UCameraComponent* FollowCamera = Owner->FindComponentByClass<UCameraComponent>();
-	FVector Start = Owner->GetActorLocation();
-	FVector ForwardVector = FollowCamera->GetForwardVector();
-	FVector GrabbedObjectPosition = (Start + (ForwardVector * 100.0f));*/
+	FTransform GrabbedObjectTransform = Owner->GetMesh()->GetSocketTransform(GrabSocket);
+	FVector TargetLocation = GrabbedObjectTransform.TransformPosition(GrabbedObjectOffset);
 
-	FVector GrabbedObjectPosition = Owner->GetMesh()->GetSocketLocation(HitSocket);
+	//FVector GrabbedObjectPosition = Owner->GetMesh()->GetSocketLocation(GrabSocket);
+	FRotator GrabbedObjectRotation = Owner->GetMesh()->GetSocketRotation(GrabSocket);
 
-	GrabHandle->SetTargetLocation(GrabbedObjectPosition);
+	//GrabHandle->SetTargetLocation(GrabbedObjectPosition);
+	GrabHandle->SetTargetLocationAndRotation(TargetLocation, GrabbedObjectRotation);
 }
 
 
