@@ -48,5 +48,4 @@ protected:
 	FName GrabSocket;
 
 	FVector GrabbedObjectOffset;
-
 };

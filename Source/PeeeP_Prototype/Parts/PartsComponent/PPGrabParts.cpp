@@ -60,6 +60,7 @@ void UPPGrabParts::OnComponentCreated()
     {
         UActorComponent* GrabComponent = PlayerCharacter->AddComponentByClass(UPhysicsHandleComponent::StaticClass(), true, FTransform::Identity, false);
         GrabHandle = CastChecked<UPhysicsHandleComponent>(GrabComponent);
+		GrabHandle->SetAngularDamping(1000.0f);
 
         APlayerController* PlayerController = CastChecked<APlayerController>(PlayerCharacter->GetController());
         if (UEnhancedInputLocalPlayerSubsystem* Subsystem
@@ -118,8 +119,8 @@ void UPPGrabParts::Grab()
 	FHitResult HitResult;
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(Grab), false, Owner);
 
-	const FVector StartPos = Owner->GetMesh()->GetSocketLocation(GrabSocket);
-	const FVector EndPos = StartPos + Owner->GetActorForwardVector() * 5.0f;
+	const FVector StartPos = Owner->GetActorLocation() + Owner->GetActorForwardVector() * 5.0f;
+	const FVector EndPos = Owner->GetMesh()->GetSocketLocation(GrabSocket);
 
 	bool HitDetected = GetWorld()->SweepSingleByChannel(HitResult, StartPos, EndPos, FQuat::Identity, ECC_GameTraceChannel2, FCollisionShape::MakeSphere(10.0f), Params);
 	if (HitDetected)
@@ -128,11 +129,17 @@ void UPPGrabParts::Grab()
 		SetIsGrabbed(true);
 
 		FVector HitLocation = HitResult.ImpactPoint;
-		FTransform HitActorTransform = HitResult.GetComponent()->GetComponentTransform();
+		FTransform HitComponentTransform = HitResult.GetComponent()->GetComponentTransform();
 
-		GrabbedObjectOffset = HitActorTransform.InverseTransformPosition(HitLocation);
+		GrabbedObjectOffset = HitComponentTransform.InverseTransformPosition(HitLocation);
 
-		GrabHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), TEXT("None"), HitResult.GetComponent()->GetComponentLocation(), FRotator::ZeroRotator);
+		UE_LOG(LogTemp, Log, TEXT("GrabbedObjectOffset : %s"), *GrabbedObjectOffset.ToString());
+
+		FRotator GrabbedObjectRotation = HitComponentTransform.Rotator();
+
+		GrabHandle->GrabComponentAtLocationWithRotation(HitResult.GetComponent(), TEXT("None"), HitLocation, HitComponentTransform.Rotator());
+
+		GrabHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel10, ECR_Ignore);
 	}
 
 #if ENABLE_DRAW_DEBUG
@@ -155,6 +162,7 @@ void UPPGrabParts::GrabRelease()
 		IsGrabbed = false;
 		if (GrabHandle->GetGrabbedComponent())
 		{
+			GrabHandle->GetGrabbedComponent()->SetCollisionResponseToChannel(ECC_GameTraceChannel10, ECR_Block);
 			GrabHandle->ReleaseComponent();
 		}
 	}
@@ -168,7 +176,8 @@ void UPPGrabParts::UpdateGrabbedObjectPosition()
 	//FVector GrabbedObjectPosition = Owner->GetMesh()->GetSocketLocation(GrabSocket);
 	FRotator GrabbedObjectRotation = Owner->GetMesh()->GetSocketRotation(GrabSocket);
 
-	//GrabHandle->SetTargetLocation(GrabbedObjectPosition);
+	//GrabHandle->SetTargetLocation(TargetLocation);
+	//GrabHandle->SetTargetLocationAndRotation(GrabbedObjectPosition - GrabbedObjectOffset, GrabbedObjectRotation);
 	GrabHandle->SetTargetLocationAndRotation(TargetLocation, GrabbedObjectRotation);
 }
 
