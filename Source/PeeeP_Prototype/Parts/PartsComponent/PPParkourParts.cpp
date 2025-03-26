@@ -32,16 +32,14 @@ void UPPParkourParts::OnComponentCreated()
 
 	Owner = Cast<APPCharacterPlayer>(GetOwner());
 
-	//Setup
-	APPCharacterPlayer* PlayerCharacter = Cast<APPCharacterPlayer>(Owner);
-
-	if (IsValid(PlayerCharacter))
+	if (IsValid(Owner))
 	{
-		PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed *= ParkourSpeedMultiplier;
-		DefaultJumpZVelocity = PlayerCharacter->GetCharacterMovement()->JumpZVelocity;
-		DefaultMaxWalkSpeed = PlayerCharacter->GetCharacterMovement()->MaxWalkSpeed;
+		DefaultJumpZVelocity = Owner->GetCharacterMovement()->JumpZVelocity;
+		DefaultMaxWalkSpeed = Owner->GetCharacterMovement()->MaxWalkSpeed;
 
-		APlayerController* PlayerController = CastChecked<APlayerController>(PlayerCharacter->GetController());
+		Owner->GetCharacterMovement()->MaxWalkSpeed *= ParkourSpeedMultiplier;
+
+		APlayerController* PlayerController = CastChecked<APlayerController>(Owner->GetController());
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem
 			= ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
