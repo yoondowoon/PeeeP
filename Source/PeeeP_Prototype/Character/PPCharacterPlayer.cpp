@@ -111,6 +111,10 @@ APPCharacterPlayer::APPCharacterPlayer()
 		GetMesh()->SetAnimInstanceClass(AnimBlueprintRef.Class);
 	}
 
+	GetCapsuleComponent()->SetCollisionProfileName(TEXT("PlayerCharacter"));
+
+	RunningMultiplier = 2.0f;	// Running Speed Multiplier. You can Setting Running Speed Multiplier.
+
 	// Camera
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));	// CameraBoom 컴포?��?���? �??��?��
 	CameraBoom->SetupAttachment(RootComponent);
@@ -134,7 +138,7 @@ APPCharacterPlayer::APPCharacterPlayer()
 	// Player Movement Setting
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 	GetCharacterMovement()->GravityScale = 1.6f;
-	this->MaxWalkSpeed = 60.0f;										// Setting Default Max Walk Speed
+	this->MaxWalkSpeed = 100.0f;										// Setting Default Max Walk Speed
 	GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;		// Apply Default Max Walk Speed
 	GetCharacterMovement()->MaxStepHeight = 5.0f;
 	GetCharacterMovement()->SetWalkableFloorAngle(50.f);
@@ -400,7 +404,7 @@ void APPCharacterPlayer::OnRunningStart(const FInputActionValue& Value)
 	// Set Player Max Walk Speed for Running.
 	if (!this->bIsRunning)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = 150.f;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
+		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed * RunningMultiplier;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
 		this->bIsRunning = true;
 		UE_LOG(LogTemp, Log, TEXT("Running Start"));
 	}
@@ -438,7 +442,7 @@ void APPCharacterPlayer::SwitchParts(UPPPartsDataBase* InPartsData)
 	RemoveParts();
 
 	UE_LOG(LogTemp, Log, TEXT("Creat New Parts"));
-	UActorComponent* PartsComponent = AddComponentByClass(InPartsData->PartsComponent, true, FTransform::Identity, false);
+	UActorComponent* PartsComponent = AddComponentByClass(InPartsData->PartsComponentClass, true, FTransform::Identity, false);
 	Parts = CastChecked<UPPPartsBase>(PartsComponent);
 	if (Parts)
 	{
@@ -484,27 +488,7 @@ void APPCharacterPlayer::GrabHitCheck()
 	UPPGrabParts* GrabParts = Cast<UPPGrabParts>(Parts);
 	if (GrabParts == nullptr) return;
 
-	FHitResult HitResult;
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(Grab), false, this);
-	const FVector StartPos = GetMesh()->GetSocketLocation(Parts->HitSocket) + GetActorForwardVector() * GetCapsuleComponent()->GetScaledCapsuleRadius();
-	const FVector EndPos = StartPos + GetActorForwardVector() * 5.0f;
-
-	bool HitDetected = GetWorld()->SweepSingleByChannel(HitResult, StartPos, EndPos, FQuat::Identity, ECC_GameTraceChannel2, FCollisionShape::MakeSphere(10.0f), Params);
-	if (HitDetected)
-	{
-		UE_LOG(LogTemp, Log, TEXT("GrabHit"));
-		GrabParts->SetIsGrabbed(true);
-		GrabParts->Grab(HitResult);
-	}
-
-
-#if ENABLE_DRAW_DEBUG
-	FVector CapsuleOrigin = StartPos + (EndPos - StartPos) * 0.5f;
-	float CapsuleHalfHeight = 5.0f * 0.5f;
-	FColor DrawColor = HitDetected ? FColor::Green : FColor::Red;
-
-	DrawDebugCapsule(GetWorld(), CapsuleOrigin, CapsuleHalfHeight, 10.0f, FRotationMatrix::MakeFromZ(GetActorForwardVector()).ToQuat(), DrawColor, false, 5.0f);
-#endif
+	GrabParts->Grab();
 }
 
 
