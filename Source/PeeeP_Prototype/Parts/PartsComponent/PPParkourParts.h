@@ -16,7 +16,7 @@ class PEEEP_PROTOTYPE_API UPPParkourParts : public UPPPartsBase
 
 public:
 	UPPParkourParts();
-	//깃 UTF-8 인코딩 테스트
+	
 	virtual void OnComponentCreated() override;
 	virtual void OnComponentDestroyed(bool bDestroyingHierarchy) override;
 
