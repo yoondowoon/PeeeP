@@ -101,6 +101,7 @@ void APPTrafficLightController::ChangeTrafficLightColor()
 			{
 				//두 가지 색상의 신호등
 			case ETrafficLightType::TL_TWO:
+			{
 				switch (CurrentTrafficLightColor)
 				{
 				case ETrafficLightColor::TC_GREEN:
@@ -112,41 +113,47 @@ void APPTrafficLightController::ChangeTrafficLightColor()
 				default:
 					break;
 				}
+			}
 				break;
+
 				// 세가지 색상의 신호등(차단 봉 없음)
 			case ETrafficLightType::TL_THREE:
-				if (CurrentTrafficLightColor == ETrafficLightColor::TC_GREEN)
+			{
+				switch (CurrentTrafficLightColor)
 				{
+				case ETrafficLightColor::TC_GREEN:
+					CurrentTrafficLightColor = ETrafficLightColor::TC_YELLOW;
+					break;
+				case ETrafficLightColor::TC_YELLOW:
 					CurrentTrafficLightColor = ETrafficLightColor::TC_RED;
+					break;
+				case ETrafficLightColor::TC_RED:
+					CurrentTrafficLightColor = ETrafficLightColor::TC_GREEN;
+					break;
+				default:
+					break;
 				}
-				else if (CurrentTrafficLightColor == ETrafficLightColor::TC_OFF)
-				{
-					// 신호등이 꺼져있을 때(현재 이 기능은 사용하지 않음)
-				}
-				else
-				{
-					uint8 TempColorNum = static_cast<uint8>(CurrentTrafficLightColor);
-					TempColorNum--;
-					CurrentTrafficLightColor = static_cast<ETrafficLightColor>(TempColorNum);
-				}
+			}
 				break;
+
 				// 세가지 색상의 신호등(차단 봉 있음)
 			case ETrafficLightType::TL_THREE_WITH_BAR:
-				if (CurrentTrafficLightColor == ETrafficLightColor::TC_GREEN)
+			{
+				switch (CurrentTrafficLightColor)
 				{
+				case ETrafficLightColor::TC_GREEN:
+					CurrentTrafficLightColor = ETrafficLightColor::TC_YELLOW;
+					break;
+				case ETrafficLightColor::TC_YELLOW:
 					CurrentTrafficLightColor = ETrafficLightColor::TC_RED;
+					break;
+				case ETrafficLightColor::TC_RED:
+					CurrentTrafficLightColor = ETrafficLightColor::TC_GREEN;
+					break;
+				default:
+					break;
 				}
-				else if (CurrentTrafficLightColor == ETrafficLightColor::TC_OFF)
-				{
-					// 신호등이 꺼져있을 때(현재 이 기능은 사용하지 않음)
-				}
-				else
-				{
-					uint8 TempColorNum = static_cast<uint8>(CurrentTrafficLightColor);
-					TempColorNum--;
-					CurrentTrafficLightColor = static_cast<ETrafficLightColor>(TempColorNum);
-				}
-				break;
+			}
 
 			default:
 				break;
