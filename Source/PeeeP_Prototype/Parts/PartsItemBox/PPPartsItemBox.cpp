@@ -53,7 +53,7 @@ void APPPartsItemBox::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor
 			UE_LOG(LogTemp, Log, TEXT("Player Overlap Begin"));
 			InventoryComponent = player->GetInventoryComponent();
 			int32 TempOutItemQuntity = 0;
-			InventoryComponent->AddItem(PartsClassName, 1, TempOutItemQuntity);
+			InventoryComponent->AddItem(PartsData.GetFName(), 1, TempOutItemQuntity);
 
 			if (nullptr != EarnSound)
 			{
