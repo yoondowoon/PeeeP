@@ -38,7 +38,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, Category = "Parts")
-	FName PartsClassName;
+	TObjectPtr<class UPPPartsDataBase> PartsData;
 private:
 	UPROPERTY()
 	TObjectPtr<class UPPInventoryComponent> InventoryComponent;
