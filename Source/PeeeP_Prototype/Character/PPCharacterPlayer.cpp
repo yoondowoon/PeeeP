@@ -404,7 +404,7 @@ void APPCharacterPlayer::OnRunningStart(const FInputActionValue& Value)
 	// Set Player Max Walk Speed for Running.
 	if (!this->bIsRunning)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed * RunningMultiplier;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
+		GetCharacterMovement()->MaxWalkSpeed *= RunningMultiplier;	// Here is Running Max Walk Speed. You can Setting Running Max Walk Speed.
 		this->bIsRunning = true;
 		UE_LOG(LogTemp, Log, TEXT("Running Start"));
 	}
@@ -413,7 +413,7 @@ void APPCharacterPlayer::OnRunningStart(const FInputActionValue& Value)
 void APPCharacterPlayer::OnRunningEnd(const FInputActionValue& Value)
 {
 	// Set Player Max Walk Speed to Default Max Walk Speed.
-	GetCharacterMovement()->MaxWalkSpeed = this->MaxWalkSpeed;
+	GetCharacterMovement()->MaxWalkSpeed /= RunningMultiplier;
 	this->bIsRunning = false;
 	UE_LOG(LogTemp, Log, TEXT("Running End"));
 }

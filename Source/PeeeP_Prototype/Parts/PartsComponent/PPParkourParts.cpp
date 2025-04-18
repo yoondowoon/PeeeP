@@ -36,7 +36,7 @@ void UPPParkourParts::OnComponentCreated()
 	if (IsValid(Owner))
 	{
 		DefaultJumpZVelocity = Owner->GetCharacterMovement()->JumpZVelocity;
-		DefaultMaxWalkSpeed = Owner->GetCharacterMovement()->MaxWalkSpeed;
+		DefaultMaxWalkSpeed = Owner->GetMaxWalkSpeed();
 
 		Owner->GetCharacterMovement()->MaxWalkSpeed *= ParkourSpeedMultiplier;
 

@@ -25,6 +25,7 @@ public:
 	APPCharacterPlayer();
 	
 	void OnDeath(uint8 bIsDead);
+	float GetMaxWalkSpeed() const { return MaxWalkSpeed; }
 protected:
 	void PlayRespawnSequence();
 	FTimerHandle RespawnTimerHandle;
