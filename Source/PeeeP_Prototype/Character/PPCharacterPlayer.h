@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -71,6 +71,7 @@ protected:
 	// Move MaxWalkSpeed Variable here from ElectricDischarge Setting Section
 	// You can Setting Player's Max Walk Speed
 	float MaxWalkSpeed;
+	float RunningMultiplier;
 
 	bool bIsRunning;
 

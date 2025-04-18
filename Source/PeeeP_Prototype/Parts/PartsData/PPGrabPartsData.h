@@ -13,7 +13,6 @@
  1. 필요한 인풋 액션
  2. 이펙트 관련 NyagaraSystem
   
-  
  */
 UCLASS()
 class PEEEP_PROTOTYPE_API UPPGrabPartsData : public UPPPartsDataBase
@@ -23,12 +22,8 @@ class PEEEP_PROTOTYPE_API UPPGrabPartsData : public UPPPartsDataBase
 public:
 	UPPGrabPartsData();
 
-	virtual FPrimaryAssetId GetPrimaryAssetId() const override
-	{
-		return FPrimaryAssetId("PPPartsData", GetFName());
-	}
-
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<class UInputAction> GrabAction;
+
 };

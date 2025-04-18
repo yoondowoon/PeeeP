@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "InteractionObject/PPGrabableObject.h"
 #include "Components/StaticMeshComponent.h"
@@ -15,6 +15,8 @@ APPGrabableObject::APPGrabableObject()
 	Mesh->SetSimulatePhysics(true);
 	Mesh->SetCollisionProfileName(TEXT("GrabObjectProfile"));
 
+	bIsGrabbed = false;
+
 }
 
 // Called when the game starts or when spawned
@@ -29,5 +31,19 @@ void APPGrabableObject::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void APPGrabableObject::SetIsGrabbed(uint8 bNewBool)
+{
+	bIsGrabbed = bNewBool;
+	if (!bIsGrabbed)
+	{
+		GrabReleaseDelegate.ExecuteIfBound();
+	}
+}
+
+uint8 APPGrabableObject::GetIsGrabbed() const
+{
+	return bIsGrabbed;
 }
 
