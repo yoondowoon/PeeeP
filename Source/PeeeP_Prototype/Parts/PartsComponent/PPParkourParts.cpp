@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Parts/PartsComponent/PPParkourParts.h"
@@ -24,6 +24,7 @@ UPPParkourParts::UPPParkourParts()
 	{
 		PartsData = ParkourPartsDataRef.Object;
 	}
+
 }
 
 void UPPParkourParts::OnComponentCreated()
@@ -35,7 +36,7 @@ void UPPParkourParts::OnComponentCreated()
 	if (IsValid(Owner))
 	{
 		DefaultJumpZVelocity = Owner->GetCharacterMovement()->JumpZVelocity;
-		DefaultMaxWalkSpeed = Owner->GetCharacterMovement()->MaxWalkSpeed;
+		DefaultMaxWalkSpeed = Owner->GetMaxWalkSpeed();
 
 		Owner->GetCharacterMovement()->MaxWalkSpeed *= ParkourSpeedMultiplier;
 

@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -28,6 +28,9 @@ protected:
 	TObjectPtr<class UPPPoolObject> PoolObject;
 
 	FTimerHandle AutoSpawnTimer;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpawnInterval;
 
 public:	
 	// Called every frame

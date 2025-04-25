@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -16,12 +16,16 @@ public:
 	APPItemSpawner();
 	void SpawnItem();
 	bool IsOpen;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TObjectPtr<class UBlueprint> Item;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	float SpawnInterval = 10.0f;
 
 public:	
 	// Called every frame

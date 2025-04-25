@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "Gimmick/PPAutoSpawner.h"
@@ -13,6 +13,8 @@ APPAutoSpawner::APPAutoSpawner()
 
 	PoolObject = CreateDefaultSubobject<UPPPoolObject>(TEXT("ObjectPool"));
 
+	SpawnInterval = 5.0f;
+
 }
 
 // Called when the game starts or when spawned
@@ -25,7 +27,7 @@ void APPAutoSpawner::BeginPlay()
 		PoolObject->SetPoolingObjectClass(SpawnActorClass);
 	}
 
-	GetWorld()->GetTimerManager().SetTimer(AutoSpawnTimer, this, &APPAutoSpawner::SpawnPoolingActor, 5.0f, true);
+	GetWorld()->GetTimerManager().SetTimer(AutoSpawnTimer, this, &APPAutoSpawner::SpawnPoolingActor, SpawnInterval, true);
 }
 
 void APPAutoSpawner::SpawnPoolingActor()
