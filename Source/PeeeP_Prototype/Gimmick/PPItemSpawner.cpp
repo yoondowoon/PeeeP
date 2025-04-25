@@ -23,7 +23,7 @@ void APPItemSpawner::SpawnItem()
 	GetWorld()->GetTimerManager().SetTimer(myTimerHandle, FTimerDelegate::CreateLambda([&]()
 		{
 			IsOpen = true;
-		}), 10, false);
+		}), SpawnInterval, false);
 }
 
 // Called when the game starts or when spawned
