@@ -29,6 +29,9 @@ protected:
 
 	FTimerHandle AutoSpawnTimer;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float SpawnInterval;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

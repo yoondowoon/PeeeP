@@ -14,7 +14,7 @@ APPBasket::APPBasket()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	SetRootComponent(Mesh);
 
-	Mesh->SetSimulatePhysics(true);
+	//Mesh->SetSimulatePhysics(true);
 	Mesh->SetCollisionObjectType(ECC_GameTraceChannel8);
 	//Mesh->SetMassScale(,10000.0f)
 }
@@ -43,12 +43,17 @@ void APPBasket::ReturnSelf()
 	if (ObjectPool != nullptr)
 	{
 		ObjectPool->ReturnObject(this);
+		Mesh->SetSimulatePhysics(false);
 	}
 	this->SetActive(false);
 }
 
 void APPBasket::SetActive(bool IsActive)
 {
+	Mesh->SetPhysicsLinearVelocity(FVector::ZeroVector);
+	Mesh->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+	Mesh->SetSimulatePhysics(true);
+
 	this->SetActorHiddenInGame(!IsActive);
 }
 
