@@ -53,7 +53,7 @@ protected:
 	TArray<TObjectPtr<class APPTrafficLightBase>> TrafficLights;
 
 	// 신호가 바뀌었을 때 신호등들의 색깔에 따른 판정을 하기 위한 TrafficLightManager
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "TrafficLightController")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "TrafficLightController")
 	TObjectPtr<class APPTrafficLightManager> TrafficLightManager;
 	
 	UPROPERTY()

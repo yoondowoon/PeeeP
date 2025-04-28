@@ -24,6 +24,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TObjectPtr<class UBlueprint> Item;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	float SpawnInterval = 10.0f;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
