@@ -50,6 +50,7 @@ void APP_ElectricMovingPlatformTest::BeginPlay()
 	
 }
 
+
 void APP_ElectricMovingPlatformTest::Charge()
 {
 	if (bIsCharged)	// 이미 차징이 되었으므로 중복은 필요 없음
