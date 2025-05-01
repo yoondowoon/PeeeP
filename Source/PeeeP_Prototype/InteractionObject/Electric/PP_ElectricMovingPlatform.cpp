@@ -37,8 +37,6 @@ APP_ElectricMovingPlatform::APP_ElectricMovingPlatform()
 	InterpToMovement->bSweep = false;									// 물체 충돌 시 경로 결정 방법
 	StopTime = 2.0f;													// 도착 시 정지하는 시간
 
-	bIsForward = true;													// 기본적으로 앞으로 이동하는 방향으로 설정합니다.
-
 	StopTimerHandle.Invalidate();											// 타이머 핸들 초기화
 	// 플랫폼 이동 시간, 이동 경로는 BP에서 설정해 주세요.
 }

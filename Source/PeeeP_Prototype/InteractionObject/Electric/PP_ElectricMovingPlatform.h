@@ -35,9 +35,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "InterpToMovement")
 	float StopTime;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "InterpToMovement")
-	uint8 bIsForward : 1;
 	
 	FTimerHandle StopTimerHandle;
 
