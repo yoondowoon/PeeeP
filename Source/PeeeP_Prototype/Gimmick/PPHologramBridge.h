@@ -4,36 +4,27 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PPAutoSpawner.generated.h"
+#include "PPHologramBridge.generated.h"
 
 UCLASS()
-class PEEEP_PROTOTYPE_API APPAutoSpawner : public AActor
+class PEEEP_PROTOTYPE_API APPHologramBridge : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APPAutoSpawner();
+	APPHologramBridge();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void SpawnPoolingActor();
-
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AActor> SpawnActorClass;
-
-	UPROPERTY()
-	TObjectPtr<class UPPPoolObject> PoolObject;
-
-	FTimerHandle AutoSpawnTimer;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SpawnInterval;
+	TObjectPtr<class UStaticMeshComponent> BridgeMesh;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void OnBridge();
 };

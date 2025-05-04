@@ -4,36 +4,29 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PPAutoSpawner.generated.h"
+#include "PPLaserTrap.generated.h"
 
 UCLASS()
-class PEEEP_PROTOTYPE_API APPAutoSpawner : public AActor
+class PEEEP_PROTOTYPE_API APPLaserTrap : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APPAutoSpawner();
+	APPLaserTrap();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void SpawnPoolingActor();
+	TObjectPtr<class UStaticMeshComponent> LaserMesh;
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AActor> SpawnActorClass;
-
-	UPROPERTY()
-	TObjectPtr<class UPPPoolObject> PoolObject;
-
-	FTimerHandle AutoSpawnTimer;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float SpawnInterval;
+	TObjectPtr<class UBoxComponent> LaserCollider;
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void OnLaserPressed(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 };
